@@ -1,0 +1,158 @@
+<html>
+    <head>
+    <title>ESP32 Web Server</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="data:,">
+    <style>
+        html {
+            font-family: Helvetica;
+            display: inline-block;
+            margin: 0px auto;
+            text-align: center;
+            background-color: #1e2447;
+        }
+        nav{
+            width: 100%;
+            height:150px;
+            padding: 0px;
+            margin: 0px;
+            border: 0px;
+            top: 0;
+            background-color: #4974ec;
+            text-align: start;
+            position: fixed;
+            translate: -8px;
+        }
+        h1 {
+            color: #0F3376;
+            /* padding: 2vh; */
+        }
+        ul {
+            list-style-type: none;
+            margin: 0;
+             padding: 0;
+        }
+        ul.full{
+           
+           
+             overflow: hidden;
+             display: grid;
+             grid-template-columns: repeat(7, 1fr);
+             column-gap: 5px;
+        }
+        .full{
+            width: 100%;
+            height: 60px;
+        }
+        .selector{
+            display: flex;
+            flex-direction: row;
+            margin-top: 10px;
+            /* position: fixed; */
+            /* background-color: aqua; */
+        }
+       ul.full li{
+            display: inline-block;
+        }
+        li button{
+            width: 100%;
+            background-color:cornflowerblue;
+            height: 90%;
+            margin: 0;
+            padding: 0;
+            border: 0;
+            border-radius: 10px;
+        }
+
+        li button:hover{
+            background-color: #1e2447;
+        }
+
+        .marco{
+            width: 100%;
+            height: 100%;
+            display: flex;;
+            justify-content: center;
+            /* align-items: center; */
+            border-radius: 20px;
+            margin-top: 20px;
+            
+        }
+        section div{
+            background-color: darkslateblue;
+            width: 95%;
+            /* height: auto; */
+        }
+        ul.cards li{
+            width: 100%;
+            height: 200px;
+        }
+
+
+      
+    </style>
+    </head>
+    <nav>
+        <h1>Pastillero</h1>   
+        <section class="selector full">
+            <ul class="full">
+                <li><button>L</button></li>
+                <li><button>Ma</button></li>
+                <li><button>Mi</button></li>
+                <li><button>J</button></li>
+                <li><button>V</button></li>
+                <li><button>S</button></li>
+                <li><button>D</button></li>
+            </ul>
+        </section>
+    </nav> 
+    <body>
+        
+
+        <section class="marco">
+            <div>
+            <ul class="cards ">
+                <li><button>L</button></li>
+                <li><button>Ma</button></li>
+                <li><button>Mi</button></li>
+                <li><button>J</button></li>
+                <li><button>V</button></li>
+                <li><button>S</button></li>
+                <li><button>D</button></li>
+            </ul>
+        </div>
+
+        </section>
+        
+      
+
+        <!-- <table>
+            <tbody>
+                <tr>
+                    <td>
+                        <p><a href="/?led-r"><button class="ButtonR Button">R</button></a></p>
+                    </td>
+                    <td>
+                        <strong> """+ r_value +"""</strong> 
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p><a href="/?led-g"><button class="ButtonG Button">G</button></a></p>
+                    </td>
+                    <td>
+                        <strong> """+ g_value +"""</strong> 
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p><a href="/?led-b"><button class="ButtonB Button">B</button></a></p>
+                    </td>
+                    <td>
+                      <strong> """+ b_value +""" </strong>  
+                    </td>
+                </tr>
+            </tbody>
+        </table> -->
+    </body>
+    </html>
