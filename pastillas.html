@@ -35,15 +35,89 @@ nav{
             width: 50px;
             height: 50px;
         }
+        .imagen{
+            width: 50px;
+            height: 50px;
+            top: 25px;
+            left: 25px;
+            
+        }
+        body{
+            padding-top: 150px;
+        }
+        .card{
+            width: 95%;
+            height: 150px;
+            margin: 5px;
+            border-color: aliceblue;
+            background-color: #0F3376;
+        }
+        .grid{
+            grid-template-columns: repeat(2, 1fr);
+            display: grid;
+        }
+        .textos{
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+        }
+        .pastilla{
+            width: 50px;
+            height: 50px;
+            
+        }
+        .add{
+            margin-top: 10px;
+            margin-left: 250px;
+            background-color: rgba(255, 255, 255, 0);
+            border-color: rgba(255, 255, 255, 0);
+        }
     </style>
+    </head>
     <nav>
         <button class="icono" onclick="window.location.href='./Web.html'"><img class="regreso" src="./assets/flecha-izquierda.png" ></button>
-        <h1>Pastillero</h1>   
+        <button class="add" onclick="window.location.href='./agregar.html'"><img class="pastilla" src="./assets/boton-agregar.png" ></button>  
+        <h1>Pastillas</h1> 
        
     </nav> 
     <body>
-        <section>
-            <div class="icono"> <img src="" alt=""></div>
+        <section class="grid">
+           
+            <div class="card"> 
+                <img src="./assets/vitamina.png" alt="" class="imagen">
+                <div  class="textos">
+                    <p>Medicamento:</p>
+                    <p>Ibuprofeno</p>
+                    <p>Cantidad</p>
+                    <p>12</p>
+                </div>
+            </div>
+            <div class="card"> 
+                <img src="./assets/vitamina.png" alt="" class="imagen">
+                <div  class="textos">
+                    <p>Medicamento:</p>
+                    <p>Ibuprofeno</p>
+                    <p>Cantidad</p>
+                    <p>12</p>
+                </div>
+            </div>
+            <div class="card"> 
+                <img src="./assets/vitamina.png" alt="" class="imagen">
+                <div  class="textos">
+                    <p>Medicamento:</p>
+                    <p>Ibuprofeno</p>
+                    <p>Cantidad</p>
+                    <p>12</p>
+                </div>
+            </div>
+            <div class="card"> 
+                <img src="./assets/vitamina.png" alt="" class="imagen">
+                <div  class="textos">
+                    <p>Medicamento:</p>
+                    <p>Ibuprofeno</p>
+                    <p>Cantidad</p>
+                    <p>12</p>
+                </div>
+            </div>
         </section>
 
         
