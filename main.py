@@ -144,10 +144,12 @@ inicio="""<html>
         </section>
     </nav> """
 
+cuerpo="""<body><section class="marco">""" + """</section></body>"""
+
 Horario=[
   {"lunes":
-    {6:[{"Pastilla":"paracetamos","cantidad":1},{"Pastilla":"diclofenaco","cantidad":2}],
-     7:[{"Pastilla":"paracetamos","cantidad":1},{"Pastilla":"diclofenaco","cantidad":2}]}
+    {8:[{"Pastilla":"paracetamos","cantidad":1},{"Pastilla":"diclofenaco","cantidad":2}],
+     9:[{"Pastilla":"paracetamos","cantidad":1},{"Pastilla":"diclofenaco","cantidad":2}]}
   },
   {"martes":
     {6:[{"Pastilla":"paracetamos","cantidad":1},{"Pastilla":"diclofenaco","cantidad":2}],
@@ -174,9 +176,23 @@ Horario=[
      7:[{"Pastilla":"paracetamos","cantidad":1},{"Pastilla":"diclofenaco","cantidad":2}]}
   }
 ]
+
+
+def card(dia):
+  for k in Horario:
+    print(k)
+    for i,y in k.items():
+      print(i + y)
+  return 0
+
+
+
 def web_page(): 
-  html = inicio + '</html>'
+  html = inicio + card +'</html>'
   return html
+
+
+
 
 
 button_pin = machine.Pin(4, machine.Pin.IN, machine.Pin.PULL_UP)  # Ejemplo con un botón en el pin GPIO 4
@@ -194,14 +210,14 @@ while True:
     request = str(request)   
     #aqui se agrega la logica
     lunes=request.find('/?lunes')
+    martes=request.find('/?martes')
     print(lunes)
     #cuando se presiona el boton lanza un 6 asi que si tiene un 6 significa que se presiono
-
-
-
-
+    if lunes == 6:
+      card("lunes")
+    if martes == 6:
+      card("martes")
     response = web_page()
-    #recuerda que aqui no se puede usar \n ni \r estos se sustituyen por  \ 
     conn.send('HTTP/1.1 200 OK \')
     conn.send('Content-Type: text/html \')
     conn.send('Connection: close \')
