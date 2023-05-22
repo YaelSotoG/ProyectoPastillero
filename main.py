@@ -1,4 +1,10 @@
 import machine
+from machine import Timer,Pin,PWM
+import time as t
+import time
+import ntptime
+import utime
+
 
 
 inicio="""<html>
@@ -144,11 +150,11 @@ inicio="""<html>
         </section>
     </nav> """
 
-cuerpo="""<body><section class="marco">""" + """</section></body>"""
+cuerpo="""<body><section class="marco"><div><ul class="cards ">""" +"""</ul></div></section></body>"""
 
 Horario=[
   {"lunes":
-    {8:[{"Pastilla":"paracetamos","cantidad":1},{"Pastilla":"diclofenaco","cantidad":2}],
+    {18:[{"Pastilla":"paracetamos","cantidad":1},{"Pastilla":"diclofenaco","cantidad":2}],
      9:[{"Pastilla":"paracetamos","cantidad":1},{"Pastilla":"diclofenaco","cantidad":2}]}
   },
   {"martes":
@@ -176,32 +182,70 @@ Horario=[
      7:[{"Pastilla":"paracetamos","cantidad":1},{"Pastilla":"diclofenaco","cantidad":2}]}
   }
 ]
+cartapastillas=""
 
+
+ 
+def servos():
+  print("activar servo")
+  sg90.duty(26)
+  time.sleep(1)
+  sg90.duty(123)
+  return
 
 def card(dia):
+  cartapastillas=""
   for k in Horario:
-    print(k)
     for i,y in k.items():
-      print(i + y)
-  return 0
+      if i==dia:
+        for z,a in y.items():
+          cartapastillas=cartapastillas + '<li class="pastillas"><button><div class="card"><h1>Pastillas:'+str(z)+' hrs </h1><ol>'
+          if z==hora:
+            servos()
+          for b in a:
+            print(b)
+            for c,d in b.items():
+              print(c)
+              if c=="Pastilla":
+                cartapastillas= cartapastillas + '<li>' + d +'</li>'
+          cartapastillas=cartapastillas+'</ol></div></button></li>'
+  return """<body><section class="marco"><div><ul class="cards ">""" + cartapastillas + """</ul></div></section></body>"""
 
-
+def desborde(Timer):
+  print("chequeop")
+  machine.reset()
+  return
 
 def web_page(): 
-  html = inicio + card +'</html>'
+  html = inicio + cuerpo + '</html>'
   return html
 
 
 
+#interrupcion por timer0
+temp=Timer(0)
+temp.init(period=150000, mode=Timer.PERIODIC, callback=desborde)
 
-
+#interrupcion por boton
 button_pin = machine.Pin(4, machine.Pin.IN, machine.Pin.PULL_UP)  # Ejemplo con un botón en el pin GPIO 4
+
+#servo
+sg90 = PWM(Pin(22, mode=Pin.OUT))
+sg90.freq(50)
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind(('', 80))
 s.listen(5)
 
 while True:
+  ntptime.settime()
+  from machine import RTC
+  (year, month, day, weekday, hour, minute, second, milisecond) = RTC().datetime()                
+  #Corrija su Zona Horaria GMT en la variable hour
+  #Ejemplo: Zona Horaria GMT corregida para Ecuador: GMT-5 = hour-5
+  RTC().init((year, month, day, weekday, hour-6, minute, second, milisecond))
+  print (RTC().datetime()[4])
+  hora=RTC().datetime()[4]
   try:
     #socket entre la pagina y el server
     conn, addr = s.accept()
@@ -209,14 +253,30 @@ while True:
     request = conn.recv(1024)
     request = str(request)   
     #aqui se agrega la logica
+   
     lunes=request.find('/?lunes')
     martes=request.find('/?martes')
+    miercoles=request.find('/?miercoles')
+    jueves=request.find('/?jueves')
+    viernes=request.find('/?viernes')
+    sabado=request.find('/?sabado')
+    domingo=request.find('/?domingo')
     print(lunes)
     #cuando se presiona el boton lanza un 6 asi que si tiene un 6 significa que se presiono
     if lunes == 6:
-      card("lunes")
+      cuerpo=card('lunes')
     if martes == 6:
-      card("martes")
+      cuerpo=card('martes')
+    if miercoles == 6:
+      cuerpo=card('miercoles')
+    if jueves == 6:
+      cuerpo=card('jueves')
+    if viernes == 6:
+      cuerpo=card('viernes')
+    if sabado == 6:
+      cuerpo=card('sabado')
+    if domingo == 6:
+      cuerpo=card('domingo')
     response = web_page()
     conn.send('HTTP/1.1 200 OK \')
     conn.send('Content-Type: text/html \')
