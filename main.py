@@ -6,7 +6,7 @@ import ntptime
 import utime
 
 
-
+paginaActual=1
 inicio="""<html>
     <head>
     <title>ESP32 Web Server</title>
@@ -42,8 +42,8 @@ inicio="""<html>
             position: absolute;
             top: 50px;
             right: 50px;
-            background-color: rgba(255, 255, 255, 0);
-            border: rgba(255, 255, 255, 0);
+            background-color: rgba(255, 255, 255, 1);
+            border: rgba(255, 255, 255, 1);
         }
 
         nav h1{
@@ -136,7 +136,7 @@ inicio="""<html>
     </head>
     <nav>
         <h1>Pastillero</h1>   
-        <button class="icono" onclick="window.location.href='./pastillas.html'"><img class="pastilla" src="./assets/vitamina.png" ></button>
+        <button class="icono" onclick="window.location.href='/?pastillas'">add</button>
         <section class="selector full">
             <ul class="full">
                  <li><a href="/?lunes"><button>L</button></a></li>
@@ -149,6 +149,72 @@ inicio="""<html>
             </ul>
         </section>
     </nav> """
+
+agregar="""<html>
+<head>
+    <title>ESP32 Web Server</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="data:,">
+    <style>
+        nav{
+            width: 100%;
+            height:150px;
+            padding: 0px;
+            margin: 0px;
+            border: 0px;
+            top: 0;
+            background-color: #4974ec;
+            text-align: start;
+            position: fixed;
+            translate: -8px;
+        }
+         .icono{
+            width: 50px;
+            height: 50px;
+            padding-top: 10px;
+            padding-left: 10px;
+            background-color: rgba(255, 255, 255, 0);
+            border: rgba(255, 255, 255, 0);
+            
+        }
+        .regreso{
+            width: 50px;
+            height: 50px;
+        }
+        h1 {
+            color: #0F3376;
+            /* padding: 2vh; */
+            padding-top: 10px;
+            padding-left: 50px;
+        }
+        body{
+            padding-top: 150px;
+        }
+
+    </style>
+    </head>
+
+    <nav>
+        <button class="icono" onclick="window.location.href='./Web.html'"><img class="regreso" src="./assets/flecha-izquierda.png" ></button>
+        <h1>Agregar Pastillas</h1> 
+    </nav> 
+    <body>
+        <form action="">
+            <p>Nombre del medicamento</p>
+            <input type="text">
+            <p>Horario de inicio</p>
+            <input type="datetime" name="" id="">
+            <p>Rango entre horas</p>
+            <input type="number">
+            <p>¿Cuantos dias?</p>
+            <input type="number" name="" id="">
+            <p>Cantidad de pastillas por dosis</p>
+            <input type="number" name="" id=""><br>
+            <input type="button" value="Agregar">
+        </form>
+    </body>
+
+    </html>"""
 
 cuerpo="""<body><section class="marco"><div><ul class="cards ">""" +"""</ul></div></section></body>"""
 
@@ -188,9 +254,10 @@ cartapastillas=""
  
 def servos():
   print("activar servo")
-  sg90.duty(26)
-  time.sleep(1)
-  sg90.duty(123)
+  if sensor_pin==1:
+    sg90.duty(26)
+    time.sleep(1)
+    sg90.duty(123)
   return
 
 def card(dia):
@@ -220,6 +287,9 @@ def web_page():
   html = inicio + cuerpo + '</html>'
   return html
 
+def agregar_page(): 
+  html = agregar
+  return html
 
 
 #interrupcion por timer0
@@ -228,7 +298,7 @@ temp.init(period=150000, mode=Timer.PERIODIC, callback=desborde)
 
 #interrupcion por boton
 button_pin = machine.Pin(4, machine.Pin.IN, machine.Pin.PULL_UP)  # Ejemplo con un botón en el pin GPIO 4
-
+sensor_pin = machine.Pin(16, machine.Pin.IN, machine.Pin.PULL_UP)
 #servo
 sg90 = PWM(Pin(22, mode=Pin.OUT))
 sg90.freq(50)
@@ -261,6 +331,7 @@ while True:
     viernes=request.find('/?viernes')
     sabado=request.find('/?sabado')
     domingo=request.find('/?domingo')
+    agregar=request.find('/?pastillas')
     print(lunes)
     #cuando se presiona el boton lanza un 6 asi que si tiene un 6 significa que se presiono
     if lunes == 6:
@@ -277,7 +348,10 @@ while True:
       cuerpo=card('sabado')
     if domingo == 6:
       cuerpo=card('domingo')
-    response = web_page()
+    if agregar== 6 :
+      response=agregar_page()
+    else:
+      response = web_page()
     conn.send('HTTP/1.1 200 OK \')
     conn.send('Content-Type: text/html \')
     conn.send('Connection: close \')
