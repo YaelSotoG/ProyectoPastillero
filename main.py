@@ -6,7 +6,7 @@ import ntptime
 import utime
 
 
-paginaActual=1
+pagina_actual = 1
 inicio="""<html>
     <head>
     <title>ESP32 Web Server</title>
@@ -136,7 +136,7 @@ inicio="""<html>
     </head>
     <nav>
         <h1>Pastillero</h1>   
-        <button class="icono" onclick="window.location.href='/?pastillas'">add</button>
+        <button class="icono"><a href="/?pastillas">add</a></button>
         <section class="selector full">
             <ul class="full">
                  <li><a href="/?lunes"><button>L</button></a></li>
@@ -173,8 +173,8 @@ agregar="""<html>
             height: 50px;
             padding-top: 10px;
             padding-left: 10px;
-            background-color: rgba(255, 255, 255, 0);
-            border: rgba(255, 255, 255, 0);
+            background-color: rgba(255, 255, 255, 1);
+            border: rgba(255, 255, 255, 1);
             
         }
         .regreso{
@@ -195,7 +195,7 @@ agregar="""<html>
     </head>
 
     <nav>
-        <button class="icono" onclick="window.location.href='./Web.html'"><img class="regreso" src="./assets/flecha-izquierda.png" ></button>
+        <button class="icono"><a href="/?regresar">Regresar</a></button>
         <h1>Agregar Pastillas</h1> 
     </nav> 
     <body>
@@ -251,6 +251,15 @@ Horario=[
 cartapastillas=""
 
 
+def get_page_html(pagina):
+  if pagina == 1:
+    html = inicio + cuerpo + '</html>'
+  elif pagina==2:
+    html=agregar
+  else:
+    html = "<html><body><h1>Página no encontrada</h1></body></html>"
+  return html
+
  
 def servos():
   print("activar servo")
@@ -283,9 +292,13 @@ def desborde(Timer):
   machine.reset()
   return
 
-def web_page(): 
-  html = inicio + cuerpo + '</html>'
-  return html
+# def web_page(): 
+#   html = inicio + cuerpo + '</html>'
+#   return html
+
+def web_page():
+  response = get_page_html(pagina_actual)
+  return response
 
 def agregar_page(): 
   html = agregar
@@ -332,6 +345,7 @@ while True:
     sabado=request.find('/?sabado')
     domingo=request.find('/?domingo')
     agregar=request.find('/?pastillas')
+    regresar=request.find('/?regresar')
     print(lunes)
     #cuando se presiona el boton lanza un 6 asi que si tiene un 6 significa que se presiono
     if lunes == 6:
@@ -349,9 +363,15 @@ while True:
     if domingo == 6:
       cuerpo=card('domingo')
     if agregar== 6 :
-      response=agregar_page()
-    else:
-      response = web_page()
+      print('Cambiar a Página 2')
+      pagina_actual = 2
+    
+    elif regresar == 6:
+      print('Cambiar a Página 1')
+      pagina_actual = 1
+      
+    response = web_page()
+    print("aqui")
     conn.send('HTTP/1.1 200 OK \')
     conn.send('Content-Type: text/html \')
     conn.send('Connection: close \')
