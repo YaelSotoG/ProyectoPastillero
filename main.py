@@ -5,8 +5,8 @@ import time
 import ntptime
 import utime
 
+indexPage=1
 
-pagina_actual = 1
 inicio="""<html>
     <head>
     <title>ESP32 Web Server</title>
@@ -136,7 +136,7 @@ inicio="""<html>
     </head>
     <nav>
         <h1>Pastillero</h1>   
-        <button class="icono"><a href="/?pastillas">add</a></button>
+        <button class="icono" onclick="window.location.href='/?pastillas'">add</button>
         <section class="selector full">
             <ul class="full">
                  <li><a href="/?lunes"><button>L</button></a></li>
@@ -150,12 +150,19 @@ inicio="""<html>
         </section>
     </nav> """
 
-agregar="""<html>
-<head>
+pastillaspage="""<html>
+    <head>
     <title>ESP32 Web Server</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="data:,">
     <style>
+       html {
+            font-family: Helvetica;
+            display: inline-block;
+            margin: 0px auto;
+            text-align: center;
+            background-color: #1e2447;
+        }
         nav{
             width: 100%;
             height:150px;
@@ -195,11 +202,11 @@ agregar="""<html>
     </head>
 
     <nav>
-        <button class="icono"><a href="/?regresar">Regresar</a></button>
+        <a href="/?regresar"><button class="icono">regresar</button></a>
         <h1>Agregar Pastillas</h1> 
     </nav> 
     <body>
-        <form action="">
+        <form>
             <p>Nombre del medicamento</p>
             <input type="text">
             <p>Horario de inicio</p>
@@ -251,15 +258,6 @@ Horario=[
 cartapastillas=""
 
 
-def get_page_html(pagina):
-  if pagina == 1:
-    html = inicio + cuerpo + '</html>'
-  elif pagina==2:
-    html=agregar
-  else:
-    html = "<html><body><h1>Página no encontrada</h1></body></html>"
-  return html
-
  
 def servos():
   print("activar servo")
@@ -292,16 +290,12 @@ def desborde(Timer):
   machine.reset()
   return
 
-# def web_page(): 
-#   html = inicio + cuerpo + '</html>'
-#   return html
-
-def web_page():
-  response = get_page_html(pagina_actual)
-  return response
+def web_page(): 
+  html = inicio + cuerpo + '</html>'
+  return html
 
 def agregar_page(): 
-  html = agregar
+  html = pastillaspage
   return html
 
 
@@ -363,15 +357,11 @@ while True:
     if domingo == 6:
       cuerpo=card('domingo')
     if agregar== 6 :
-      print('Cambiar a Página 2')
-      pagina_actual = 2
-    
-    elif regresar == 6:
-      print('Cambiar a Página 1')
-      pagina_actual = 1
-      
-    response = web_page()
-    print("aqui")
+      response=agregar_page()
+    else:
+      response = web_page()
+    if regresar==6:
+      response = web_page()
     conn.send('HTTP/1.1 200 OK \')
     conn.send('Content-Type: text/html \')
     conn.send('Connection: close \')
